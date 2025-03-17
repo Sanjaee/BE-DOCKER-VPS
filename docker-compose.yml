@@ -1,35 +1,27 @@
 version: "3.8"
 
 services:
-  backend:
-    build: .
-    container_name: pengalaman_backend_app
-    restart: always
-    volumes:
-      - ./public/uploads:/app/public/uploads
-    ports:
-      - "3006:3006"
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: namadb
-
   db:
-    image: postgres:16
-    container_name: pengalaman_postgres_db
-    restart: always
-    ports:
-      - "5433:5432"
+    image: postgres:13
+    container_name: postgres
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: namadb
+      POSTGRES_DB: expressjs_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
+  app:
+    build: .
+    container_name: expressjs
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/expressjs_db?schema=public"
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    command: npm run dev
 volumes:
   postgres_data:

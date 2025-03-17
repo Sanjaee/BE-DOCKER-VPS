@@ -1,20 +1,26 @@
-# Gunakan base image Node.js
+# Menggunakan Node.js sebagai base image
 FROM node:20
 
-# Set working directory dalam container
+# Set working directory
 WORKDIR /app
 
-# Copy file package.json dan package-lock.json
+# Menyalin package.json dan package-lock.json
 COPY package*.json ./
+
+# Menyalin folder prisma ke dalam container
+COPY prisma ./prisma
 
 # Install dependencies
 RUN npm install
 
-# Copy semua file ke dalam container
+# Menyalin semua file proyek ke dalam container
 COPY . .
 
-# Expose port yang digunakan aplikasi
-EXPOSE 3006
+# Build Prisma
+RUN npx prisma generate
 
-# Jalankan aplikasi
+# Expose port aplikasi
+EXPOSE 3001
+
+# Menjalankan aplikasi
 CMD ["npm", "run", "dev"]
