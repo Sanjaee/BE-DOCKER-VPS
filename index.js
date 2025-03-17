@@ -12,6 +12,9 @@ app.use(express.json())
 app.use("/auth", authRoutes)
 app.use("/store", storeRoutes)
 
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Api is running successfully" })
+})
 
 const port = process.env.PORT || 4000
 
