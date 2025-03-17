@@ -1,23 +1,20 @@
-# Gunakan Node.js versi terbaru sebagai base image
+# Gunakan base image Node.js
 FROM node:20
 
-# Set working directory di dalam container
+# Set working directory dalam container
 WORKDIR /app
 
-# Salin file package.json dan package-lock.json
+# Copy file package.json dan package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Salin semua file proyek ke dalam container
+# Copy semua file ke dalam container
 COPY . .
 
-# Generate Prisma Client setelah install
-RUN npx prisma generate
+# Expose port yang digunakan aplikasi
+EXPOSE 3004
 
-# Pastikan Prisma migration dijalankan saat container berjalan
-CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
-
-# Expose port aplikasi (ubah sesuai kebutuhan)
-EXPOSE 3000
+# Jalankan aplikasi
+CMD ["npm", "run", "dev"]
